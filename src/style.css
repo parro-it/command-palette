@@ -33,9 +33,11 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.command-palette li.active {
+
+.command-palette .active {
   background: blue;
 }
+
 .command-palette input {
   width: 100%;
 }

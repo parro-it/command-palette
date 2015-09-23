@@ -4,6 +4,7 @@ const Jets = require('jets');
 const fs = require('fs');
 const insertCss = require('insert-css');
 const css = fs.readFileSync(__dirname + '/style.css');
+const EventListener = require('events').EventListener;
 insertCss(css);
 
 function guid() {
@@ -56,5 +57,20 @@ exports.create = (commands) => {
     });
   });
 
-  return nav;
+  class CommandPalette extends EventListener {
+    constructor() {
+      super();
+      this.element = nav;
+    }
+
+    show() {}
+
+    hide() {}
+
+    appendTo(parent) {
+      parent.appendChild(this.element);
+    }
+  }
+
+  return new CommandPalette();
 };
