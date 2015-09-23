@@ -43,16 +43,21 @@
     "co": "^4.6.0",
     "codeclimate-test-reporter": "^0.1.1",
     "electron-prebuilt": "^0.33.1",
+    "electron-window": "^0.6.0",
     "eslint": "^1.5.0",
     "eslint-config-airbnb": "0.0.8",
     "eslint-plugin-babel": "^2.1.1",
     "eslint-plugin-react": "^3.4.2",
+    "faucet": "0.0.1",
     "hihat": "^2.4.3",
-    "tap-dev-tool": "^1.3.0",
     "istanbul": "^0.3.20",
     "nodemon": "^1.7.0",
-    "faucet": "0.0.1",
+    "tap-dev-tool": "^1.3.0",
     "tape-async": "^1.0.2"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "insert-css": "^0.2.0",
+    "jets": "^0.3.0"
+  }
 }

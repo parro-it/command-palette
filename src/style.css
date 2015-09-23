@@ -1,0 +1,45 @@
+.command-palette {
+    display: block;
+    border: 1px solid gray;
+    width: 300px;
+    height: 400px;
+    float: right;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px gray;
+    padding: 5px;
+}
+
+.command-palette ul {
+  list-style-type: none;
+  list-style: none;
+  padding-left: 0;
+  display: block;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: -webkit-calc(100% - 54px);
+}
+
+.command-palette input,
+.command-palette li {
+  display: block;
+  border: 1px solid lightgray;
+  padding: 6px;
+  margin-bottom: 4px;
+  box-shadow: 2px 2px 3px #e0e0e0;
+  width: -webkit-calc(100% - 14px);
+  font-size: 14pt;
+  font-family: monospace;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.command-palette li.active {
+  background: blue;
+}
+.command-palette input {
+  width: 100%;
+}
+
+.command-palette input:focus {
+  outline: none;
+}
