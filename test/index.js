@@ -18,7 +18,7 @@ if (process.env.debug) {
 }
 
 if (process.env.quit) {
-  window.quit = () => window.close();
+  window.quit = () => process.exit();
 }
 
 function recreatePalette() {
@@ -120,9 +120,11 @@ test('commands are ordered', t => {
 });
 
 if (process.env.quit) {
-  test('quit test environment.', () => {
+  test('quit test environment.', t => {
+    t.ok(true);
     if (window.quit) {
-      window.quit();
+      setTimeout(() => window.quit());
     }
   });
 }
+
