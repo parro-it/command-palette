@@ -27,8 +27,10 @@
     "test": "hihat --node --no-devtool --print --quit test | faucet",
     "lint": "eslint src/*.js test/*.js",
     "check": "npm run lint && npm run test",
+    "release-minor": "npm version minor && npm publish && git push --follow-tags",
     "prepublish": "npm run check"
   },
+
   "eslintConfig": {
     "extends": "eslint-config-airbnb",
     "plugins": [
