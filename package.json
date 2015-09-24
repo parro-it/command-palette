@@ -5,7 +5,7 @@
   "bugs": {
     "url": "https://github.com/parro-it/command-palette/issues"
   },
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "src/index.js",
   "engines": {
     "node": ">=4.1"
@@ -30,7 +30,6 @@
     "release-minor": "npm version minor && npm publish && git push --follow-tags",
     "prepublish": "npm run check"
   },
-
   "eslintConfig": {
     "extends": "eslint-config-airbnb",
     "plugins": [
