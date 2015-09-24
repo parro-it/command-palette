@@ -24,9 +24,9 @@
     "cover": "rm -rf coverage && istanbul cover test/index.js && codeclimate-test-reporter < coverage/lcov.info",
     "debug": "hihat --node test -- -p tap-dev-tool",
     "watch": "nodemon test | faucet",
-    "test": "hihat --node --no-devtool --print --quit test | faucet",
+    "test": "quit=1 hihat --node --no-devtool --print --quit test | faucet",
     "lint": "eslint src/*.js test/*.js",
-    "check": "npm run lint && npm run test",
+    "check": "npm run lint  --silent && npm run test  --silent",
     "release-minor": "npm version minor && npm publish && git push --follow-tags",
     "prepublish": "npm run check"
   },

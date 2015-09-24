@@ -5,15 +5,21 @@ const commandPalette = require('..');
 const commands = require('./fixtures/commands');
 const rum = require('rum-node');
 
-global.openChrome = () => {
-  const BrowserWindow = require('remote').require('browser-window');
-  const win = BrowserWindow.getAllWindows()[0];
+if (process.env.debug) {
+  window.commandPalette = commandPalette;
+  window.openChrome = () => {
+    const BrowserWindow = require('remote').require('browser-window');
+    const win = BrowserWindow.getAllWindows()[0];
 
-  win.setSize(800, 600);
-  win.center();
-  win.show();
-};
+    win.setSize(800, 600);
+    win.center();
+    win.show();
+  };
+}
 
+if (process.env.quit) {
+  window.quit = () => window.close();
+}
 
 function recreatePalette() {
   document.body.innerHTML = '';
@@ -21,7 +27,6 @@ function recreatePalette() {
   palette.appendTo(document.body);
   return palette;
 }
-
 
 test('palette element property return root widget element', t => {
   const palette = recreatePalette();
@@ -100,9 +105,6 @@ test('commands are ordered', t => {
   const palette = recreatePalette();
   const commandElements = Array.from(palette.element.querySelectorAll('li'));
 
-  window.palette=palette
-  window.rum = rum
-
   function stringSort(a, b) {
     if (a === b) {
       return 0;
@@ -116,3 +118,11 @@ test('commands are ordered', t => {
     stringSort
   ), 'commands are ordered');
 });
+
+if (process.env.quit) {
+  test('quit test environment.', () => {
+    if (window.quit) {
+      window.quit();
+    }
+  });
+}
