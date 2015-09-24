@@ -23,26 +23,87 @@ function recreatePalette() {
 }
 
 
-test('command-palette: element return root widget element', t => {
+test('palette element property return root widget element', t => {
   const palette = recreatePalette();
   const nav = palette.element;
   t.equal(nav.tagName, 'NAV');
 });
 
 
-test('command-palette: contain all commands', t => {
+test('palette DOM contain all commands', t => {
   const palette = recreatePalette();
   const commandElements = palette.element.querySelectorAll('li');
   t.equal(commandElements.length, commands.length);
 });
 
+test('palette.show make the element visible', t => {
+  const palette = recreatePalette();
+  palette.show();
+  t.equal(palette.element.style.display, '');
+});
 
-test('command-palette: commands are ordered', t => {
+test('palette start invisible', t => {
+  const palette = recreatePalette();
+  t.equal(palette.element.style.display, 'none');
+});
+
+test('palette.hide make the element invisible', t => {
+  const palette = recreatePalette();
+  palette.show();
+  palette.hide();
+  t.equal(palette.element.style.display, 'none');
+});
+
+
+test('palette.active return the command currently active', t => {
+  const palette = recreatePalette();
+  t.equal(palette.active(), 'Align JSON formatting');
+});
+
+function simulateKeyPress(elm, k) {
+  const evt = document.createEvent('KeyboardEvent');
+  const init = evt.initKeyboardEvent ? evt.initKeyboardEvent.bind(evt) : evt.initKeyEvent.bind(evt);
+  // Chromium Hack
+  Object.defineProperty(evt, 'keyCode', {
+    get() {
+      return this.keyCodeVal;
+    }
+  });
+  Object.defineProperty(evt, 'which', {
+    get() {
+      return this.keyCodeVal;
+    }
+  });
+
+  init.call(evt, 'keyup', true, true, document.defaultView, false, false, false, false, k, k);
+  evt.keyCodeVal = k;
+
+  elm.dispatchEvent(evt);
+}
+
+
+test('key down activate next command', t => {
+  const palette = recreatePalette();
+  simulateKeyPress(palette.search, 40);
+  t.equal(palette.active(), 'Align table with Regular');
+});
+
+test('key up activate prev command', t => {
+  const palette = recreatePalette();
+  simulateKeyPress(palette.search, 40);
+  simulateKeyPress(palette.search, 40);
+  simulateKeyPress(palette.search, 38);
+  t.equal(palette.active(), 'Align table with Regular');
+});
+
+test('commands are ordered', t => {
   const palette = recreatePalette();
   const commandElements = Array.from(palette.element.querySelectorAll('li'));
-  window.commandElements=commandElements
+
+  window.palette=palette
   window.rum = rum
-  function stringSort (a, b) {
+
+  function stringSort(a, b) {
     if (a === b) {
       return 0;
     }
