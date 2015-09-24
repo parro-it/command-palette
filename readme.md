@@ -1,6 +1,6 @@
 # command-palette
 
-
+Awesome Sublime like command palette written in plain javascript
 
 [![Travis Build Status](https://img.shields.io/travis/parro-it/command-palette.svg)](http://travis-ci.org/parro-it/command-palette)
 [![NPM module](https://img.shields.io/npm/v/command-palette.svg)](https://npmjs.org/package/command-palette)
@@ -27,6 +27,6 @@ npm install --save command-palette
 ## Credits
 
 ## License
-The MIT License (MIT)n
-Copyright (c) 2015 Andrea Parodin
-n
+The MIT License (MIT)
+Copyright (c) 2015 Andrea Parodi
+
