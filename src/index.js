@@ -28,8 +28,13 @@ exports.create = (commands) => {
   nav.style.display = 'none';
   nav.classList.add('command-palette');
 
+  let isfirst = true;
   const addCommand = cmd => {
     const li = document.createElement('li');
+    if (isfirst) {
+      li.classList.add('active');
+      isfirst = false;
+    }
     li.appendChild(document.createTextNode(cmd));
     ul.appendChild(li);
     return li;
@@ -49,7 +54,8 @@ exports.create = (commands) => {
     search: search,
     list: ul,
     active() {
-      return this._activeElement().innerText;
+      const elm = this._activeElement();
+      return (elm && elm.innerText) || '';
     },
 
     _activeElement() {
@@ -65,6 +71,12 @@ exports.create = (commands) => {
     },
 
     _initSearchInput() {
+      if (this.called) {
+        return;
+      }
+      this.called = true;
+
+
       search.addEventListener('keyup', e => {
         if (e.which === 40) {
           const act = this._activeElement();
@@ -77,20 +89,30 @@ exports.create = (commands) => {
         }
       });
       search.addEventListener('input', () => {
-        const currentlyActive = this.active();
+        const currentlyActive = this._activeElement();
         if (currentlyActive) {
           currentlyActive.classList.remove('active');
         }
-        const firstVisible = this.jet ? document.querySelector(
-          this.jet.styleTag.innerText
-            .slice(0, -15)
-            .replace(':not(', ' ')
+        setTimeout(() => {
+          const searchText = this.jet.styleTag.innerText;
+          let firstVisible;
 
-        ) : null;
+          if (searchText === '') {
+            firstVisible = this.list.children[0];
+          } else if (this.jet) {
+            firstVisible = document.querySelector(
+            this.jet.styleTag.innerText
+              .slice(0, -15)
+              .replace(':not(', ' ')
+            );
+          } else {
+            firstVisible = null;
+          }
 
-        if (firstVisible) {
-          firstVisible.classList.add('active');
-        }
+          if (firstVisible) {
+            firstVisible.classList.add('active');
+          }
+        });
       });
     },
 

@@ -66,6 +66,7 @@ function simulateKeyPress(elm, k) {
   });
 
   init.call(evt, 'keyup', true, true, document.defaultView, false, false, false, false, k, k);
+  init.call(evt, 'input', true, true, document.defaultView, false, false, false, false, k, k);
   evt.keyCodeVal = k;
 
   elm.dispatchEvent(evt);
@@ -75,7 +76,10 @@ function simulateKeyPress(elm, k) {
 test('key down activate next command', t => {
   const palette = recreatePalette();
   simulateKeyPress(palette.search, 40);
-  t.equal(palette.active(), 'Align table with Regular');
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Align table with Regular');
+    resolve();
+  }, 100));
 });
 
 test('key up activate prev command', t => {
@@ -83,8 +87,21 @@ test('key up activate prev command', t => {
   simulateKeyPress(palette.search, 40);
   simulateKeyPress(palette.search, 40);
   simulateKeyPress(palette.search, 38);
-  t.equal(palette.active(), 'Align table with Regular');
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Align table with Regular');
+    resolve();
+  }, 100));
 });
+
+test('can be filtered by text', t => {
+  const palette = recreatePalette();
+  simulateKeyPress(palette.search, 'C'.charCodeAt(0));
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Clear all bookmarks');
+    resolve();
+  }, 100));
+});
+
 
 test('commands are ordered', t => {
   const palette = recreatePalette();
@@ -105,7 +122,7 @@ test('commands are ordered', t => {
 });
 
 if (global.collider) {
-  global.commandPalette = commandPalette;
+  global.commandPalette = recreatePalette();
 
   test.syncTest('quit test environment.', t => {
     process.stdout.write('1..10\n');
