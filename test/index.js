@@ -5,21 +5,6 @@ const commandPalette = require('..');
 const commands = require('./fixtures/commands');
 const rum = require('rum-node');
 
-if (process.env.debug) {
-  window.commandPalette = commandPalette;
-  window.openChrome = () => {
-    const BrowserWindow = require('remote').require('browser-window');
-    const win = BrowserWindow.getAllWindows()[0];
-
-    win.setSize(800, 600);
-    win.center();
-    win.show();
-  };
-}
-
-if (process.env.quit) {
-  window.quit = () => process.exit();
-}
 
 function recreatePalette() {
   document.body.innerHTML = '';
@@ -119,12 +104,13 @@ test('commands are ordered', t => {
   ), 'commands are ordered');
 });
 
-if (process.env.quit) {
-  test('quit test environment.', t => {
-    t.ok(true);
-    if (window.quit) {
-      setTimeout(() => window.quit());
-    }
+if (global.collider) {
+  global.commandPalette = commandPalette;
+
+  test.syncTest('quit test environment.', t => {
+    process.stdout.write('1..10\n');
+    t.ok(true, 'quit');
+    setTimeout(() => global.collider.quit(), 100);
   });
 }
 
