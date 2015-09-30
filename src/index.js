@@ -78,21 +78,24 @@ exports.create = (commands) => {
 
 
       search.addEventListener('keyup', e => {
+        const currentlyActive = this._activeElement();
+
         if (e.which === 40) {
-          const act = this._activeElement();
-          act.classList.remove('active');
-          act.nextSibling.classList.add('active');
+          currentlyActive.classList.remove('active');
+          currentlyActive.nextSibling.classList.add('active');
         } else if (e.which === 38) {
-          const act = this._activeElement();
-          act.classList.remove('active');
-          act.previousSibling.classList.add('active');
+          currentlyActive.classList.remove('active');
+          currentlyActive.previousSibling.classList.add('active');
         }
       });
+
       search.addEventListener('input', () => {
         const currentlyActive = this._activeElement();
+
         if (currentlyActive) {
           currentlyActive.classList.remove('active');
         }
+
         setTimeout(() => {
           const searchText = this.jet.styleTag.innerText;
           let firstVisible;

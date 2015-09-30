@@ -50,7 +50,7 @@ test('palette.active return the command currently active', t => {
   t.equal(palette.active(), 'Align JSON formatting');
 });
 
-function simulateKeyPress(elm, k) {
+function simulateKeyPress(elm, k, type) {
   const evt = document.createEvent('KeyboardEvent');
   const init = evt.initKeyboardEvent ? evt.initKeyboardEvent.bind(evt) : evt.initKeyEvent.bind(evt);
   // Chromium Hack
@@ -65,17 +65,17 @@ function simulateKeyPress(elm, k) {
     }
   });
 
-  init.call(evt, 'keyup', true, true, document.defaultView, false, false, false, false, k, k);
-  init.call(evt, 'input', true, true, document.defaultView, false, false, false, false, k, k);
   evt.keyCodeVal = k;
+  init.call(evt, type, true, true, document.defaultView, false, false, false, false, k, k);
 
   elm.dispatchEvent(evt);
+  return evt;
 }
 
 
 test('key down activate next command', t => {
   const palette = recreatePalette();
-  simulateKeyPress(palette.search, 40);
+  simulateKeyPress(palette.search, 40, 'keyup');
   return new Promise(resolve => setTimeout(() => {
     t.equal(palette.active(), 'Align table with Regular');
     resolve();
@@ -84,9 +84,9 @@ test('key down activate next command', t => {
 
 test('key up activate prev command', t => {
   const palette = recreatePalette();
-  simulateKeyPress(palette.search, 40);
-  simulateKeyPress(palette.search, 40);
-  simulateKeyPress(palette.search, 38);
+  simulateKeyPress(palette.jet.search_tag, 40, 'keyup');
+  simulateKeyPress(palette.jet.search_tag, 40, 'keyup');
+  simulateKeyPress(palette.jet.search_tag, 38, 'keyup');
   return new Promise(resolve => setTimeout(() => {
     t.equal(palette.active(), 'Align table with Regular');
     resolve();
@@ -95,7 +95,13 @@ test('key up activate prev command', t => {
 
 test('can be filtered by text', t => {
   const palette = recreatePalette();
-  simulateKeyPress(palette.search, 'C'.charCodeAt(0));
+  palette.search.focus();
+
+  palette.jet.search_tag.value = 'c';
+  const ev = simulateKeyPress(palette.jet.search_tag, 'c'.charCodeAt(0), 'keydown');
+  palette.jet._onSearch(ev);
+  simulateKeyPress(palette.search, 'c'.charCodeAt(0), 'input');
+
   return new Promise(resolve => setTimeout(() => {
     t.equal(palette.active(), 'Clear all bookmarks');
     resolve();
@@ -122,7 +128,12 @@ test('commands are ordered', t => {
 });
 
 if (global.collider) {
-  global.commandPalette = recreatePalette();
+  global.recreatePalette = () => {
+    const p = recreatePalette();
+    p.show();
+    global.collider.open();
+    return p;
+  };
 
   test.syncTest('quit test environment.', t => {
     process.stdout.write('1..10\n');
