@@ -59,7 +59,7 @@ exports.create = (commands) => {
     },
 
     _activeElement() {
-      return this.element.querySelector('.active');
+      return this.list.querySelector('.active');
     },
 
     show() {
@@ -70,7 +70,13 @@ exports.create = (commands) => {
       this.element.style.display = 'none';
     },
 
-    _ensureVisible(elm) {
+    activate(elm) {
+      const currentlyActive = this._activeElement();
+      if (currentlyActive) {
+        currentlyActive.classList.remove('active');
+      }
+
+      elm.classList.add('active');
       if ((elm.offsetTop - this.list.offsetTop - this.list.clientHeight + elm.scrollHeight) > this.list.scrollTop) {
         this.list.scrollTop = elm.offsetTop - this.list.offsetTop - this.list.clientHeight + elm.scrollHeight;
       }
@@ -80,40 +86,32 @@ exports.create = (commands) => {
       }
     },
 
-    activateNext(howMany) {
+    move(howMany, next, defaultResult) {
       howMany = howMany === undefined ? 1 : howMany; // eslint-disable-line no-param-reassign
 
       const currentlyActive = this._activeElement();
-      currentlyActive.classList.remove('active');
 
       let i = howMany;
       let newActive = currentlyActive;
-      while (i-- /*&& newActive !== null*/) {
-        newActive = newActive.nextSibling;
+      while (i-- && newActive !== null) {
+        newActive = next(newActive);
+      }
+
+      if (!newActive && defaultResult) {
+        newActive = defaultResult;
       }
 
       if (newActive) {
-        newActive.classList.add('active');
-        this._ensureVisible(newActive);
+        this.activate(newActive);
       }
     },
 
+    activateNext(howMany) {
+      this.move(howMany, commandElm => commandElm.nextSibling, this.list.lastElementChild);
+    },
+
     activatePrev(howMany) {
-      howMany = howMany === undefined ? 1 : howMany; // eslint-disable-line no-param-reassign
-
-      const currentlyActive = this._activeElement();
-      currentlyActive.classList.remove('active');
-
-      let i = howMany;
-      let newActive = currentlyActive;
-      while (i-- /*&& newActive !== null*/) {
-        newActive = newActive.previousSibling;
-      }
-
-      if (newActive) {
-        newActive.classList.add('active');
-        this._ensureVisible(newActive);
-      }
+      this.move(howMany, commandElm => commandElm.previousSibling, this.list.firstElementChild);
     },
 
     _initSearchInput() {

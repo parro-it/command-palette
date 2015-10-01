@@ -122,6 +122,23 @@ test('activatePrev activate prev n command', t => {
 });
 
 
+test('activatePrev before first command activate it', t => {
+  const palette = recreatePalette();
+  palette.activateNext(2);
+  palette.activatePrev(10);
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Align JSON formatting');
+    resolve();
+  }, 100));
+});
+
+test('activateNext after last command activate it', t => {
+  const palette = recreatePalette();
+  palette.activateNext(100);
+  t.equal(palette.active(), 'Unfold code');
+});
+
+
 test('activatePrev activate prev command', t => {
   const palette = recreatePalette();
   palette.activateNext(2);
@@ -131,6 +148,7 @@ test('activatePrev activate prev command', t => {
     resolve();
   }, 100));
 });
+
 test('key up activate prev command', t => {
   const palette = recreatePalette();
   simulateKeyPress(palette.jet.search_tag, 40, 'keyup');
@@ -153,9 +171,6 @@ test('page up activate prev 10 command', t => {
     resolve();
   }, 100));
 });
-
-
-
 
 test('key up activate prev command', t => {
   const palette = recreatePalette();
@@ -211,7 +226,7 @@ if (global.collider) {
   };
 
   test.syncTest('quit test environment.', t => {
-    process.stdout.write('1..18\n');
+    process.stdout.write('1..20\n');
     t.ok(true, 'quit');
     setTimeout(() => global.collider.quit(), 100);
   });
