@@ -70,6 +70,21 @@ exports.create = (commands) => {
       this.element.style.display = 'none';
     },
 
+    activateNextCommand() {
+      const currentlyActive = this._activeElement();
+      currentlyActive.classList.remove('active');
+      currentlyActive.nextSibling.classList.add('active');
+      if (currentlyActive.nextSibling.offsetTop > this.list.scrollTop) {
+        this.list.scrollTop += currentlyActive.scrollHeight + 6;
+      }
+    },
+
+    activatePrevCommand() {
+      const currentlyActive = this._activeElement();
+      currentlyActive.classList.remove('active');
+      currentlyActive.previousSibling.classList.add('active');
+    },
+
     _initSearchInput() {
       if (this.called) {
         return;
@@ -78,14 +93,10 @@ exports.create = (commands) => {
 
 
       search.addEventListener('keyup', e => {
-        const currentlyActive = this._activeElement();
-
         if (e.which === 40) {
-          currentlyActive.classList.remove('active');
-          currentlyActive.nextSibling.classList.add('active');
+          this.activateNextCommand();
         } else if (e.which === 38) {
-          currentlyActive.classList.remove('active');
-          currentlyActive.previousSibling.classList.add('active');
+          this.activatePrevCommand();
         }
       });
 
