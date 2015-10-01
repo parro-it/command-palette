@@ -1,6 +1,6 @@
 'use strict';
 
-const test = require('tape-async');
+const test = require('esenv/tape');
 const commandPalette = require('..');
 const commands = require('./fixtures/commands');
 const rum = require('rum-node');
