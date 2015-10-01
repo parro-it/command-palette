@@ -92,6 +92,45 @@ test('page down activate next 10 command', t => {
   }, 100));
 });
 
+test('activateNext activate next n command', t => {
+  const palette = recreatePalette();
+  palette.activateNext(10);
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Delete to start of line');
+    resolve();
+  }, 100));
+});
+
+
+test('activateNext activate next command', t => {
+  const palette = recreatePalette();
+  palette.activateNext();
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Align table with Regular');
+    resolve();
+  }, 100));
+});
+
+test('activatePrev activate prev n command', t => {
+  const palette = recreatePalette();
+  palette.activateNext(20);
+  palette.activatePrev(10);
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Delete to start of line');
+    resolve();
+  }, 100));
+});
+
+
+test('activatePrev activate prev command', t => {
+  const palette = recreatePalette();
+  palette.activateNext(2);
+  palette.activatePrev(1);
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Align table with Regular');
+    resolve();
+  }, 100));
+});
 test('key up activate prev command', t => {
   const palette = recreatePalette();
   simulateKeyPress(palette.jet.search_tag, 40, 'keyup');
@@ -116,20 +155,13 @@ test('page up activate prev 10 command', t => {
 });
 
 
-test('activateNextCommand activate next command', t => {
-  const palette = recreatePalette();
-  palette.activateNextCommand();
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Align table with Regular');
-    resolve();
-  }, 100));
-});
+
 
 test('key up activate prev command', t => {
   const palette = recreatePalette();
-  palette.activateNextCommand();
-  palette.activateNextCommand();
-  palette.activatePrevCommand();
+  palette.activateNext();
+  palette.activateNext();
+  palette.activatePrev();
   return new Promise(resolve => setTimeout(() => {
     t.equal(palette.active(), 'Align table with Regular');
     resolve();
@@ -179,7 +211,7 @@ if (global.collider) {
   };
 
   test.syncTest('quit test environment.', t => {
-    process.stdout.write('1..13\n');
+    process.stdout.write('1..18\n');
     t.ok(true, 'quit');
     setTimeout(() => global.collider.quit(), 100);
   });

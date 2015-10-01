@@ -80,18 +80,40 @@ exports.create = (commands) => {
       }
     },
 
-    activateNextCommand() {
+    activateNext(howMany) {
+      howMany = howMany === undefined ? 1 : howMany; // eslint-disable-line no-param-reassign
+
       const currentlyActive = this._activeElement();
       currentlyActive.classList.remove('active');
-      currentlyActive.nextSibling.classList.add('active');
-      this._ensureVisible(currentlyActive.nextSibling);
+
+      let i = howMany;
+      let newActive = currentlyActive;
+      while (i-- /*&& newActive !== null*/) {
+        newActive = newActive.nextSibling;
+      }
+
+      if (newActive) {
+        newActive.classList.add('active');
+        this._ensureVisible(newActive);
+      }
     },
 
-    activatePrevCommand() {
+    activatePrev(howMany) {
+      howMany = howMany === undefined ? 1 : howMany; // eslint-disable-line no-param-reassign
+
       const currentlyActive = this._activeElement();
       currentlyActive.classList.remove('active');
-      currentlyActive.previousSibling.classList.add('active');
-      this._ensureVisible(currentlyActive.previousSibling);
+
+      let i = howMany;
+      let newActive = currentlyActive;
+      while (i-- /*&& newActive !== null*/) {
+        newActive = newActive.previousSibling;
+      }
+
+      if (newActive) {
+        newActive.classList.add('active');
+        this._ensureVisible(newActive);
+      }
     },
 
     _initSearchInput() {
@@ -103,17 +125,13 @@ exports.create = (commands) => {
 
       search.addEventListener('keyup', e => {
         if (e.which === 40) {
-          this.activateNextCommand();
+          this.activateNext();
         } else if (e.which === 38) {
-          this.activatePrevCommand();
+          this.activatePrev();
         } else if (e.which === 34) {
-          for (let i = 0; i < 10; i++) {
-            this.activateNextCommand();
-          }
+          this.activateNext(10);
         } else if (e.which === 33) {
-          for (let i = 0; i < 10; i++) {
-            this.activatePrevCommand();
-          }
+          this.activatePrev(10);
         }
       });
 
