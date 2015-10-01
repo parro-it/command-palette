@@ -19,53 +19,129 @@ function guid() {
 
 exports.create = (commands) => {
   const search = document.createElement('input');
+  search.type = 'search';
+
   const ul = document.createElement('ul');
+
   const nav = document.createElement('nav');
   nav.id = guid();
-  search.type = 'search';
+  nav.style.display = 'none';
   nav.classList.add('command-palette');
 
-
-  commands.sort();
-  for (const cmd of commands) {
+  let isfirst = true;
+  const addCommand = cmd => {
     const li = document.createElement('li');
+    if (isfirst) {
+      li.classList.add('active');
+      isfirst = false;
+    }
     li.appendChild(document.createTextNode(cmd));
     ul.appendChild(li);
-  }
+    return li;
+  };
+
+  commands.sort();
+  const first = addCommand(commands[0]);
+  first.classList.add('active');
+  commands.slice(1).forEach(addCommand);
+
 
   nav.appendChild(search);
   nav.appendChild(ul);
 
-  search.addEventListener('input', () => {
-    const currentlyActive = document.querySelector(`#${nav.id} li.active`);
-    if (currentlyActive) {
-      currentlyActive.classList.remove('active');
-    }
-    const firstVisible = this.jet ? document.querySelector(
-      this.jet.styleTag.innerText
-        .slice(0, -15)
-        .replace(':not(', ' ')
-
-    ) : null;
-
-    if (firstVisible) {
-      firstVisible.classList.add('active');
-    }
-  });
-
   return Object.assign(new EventEmitter(), {
     element: nav,
+    search: search,
+    list: ul,
+    active() {
+      const elm = this._activeElement();
+      return (elm && elm.innerText) || '';
+    },
 
-    show() {},
+    _activeElement() {
+      return this.element.querySelector('.active');
+    },
 
-    hide() {},
+    show() {
+      this.element.style.display = '';
+    },
 
-    appendTo(parent) {
-      parent.appendChild(this.element);
+    hide() {
+      this.element.style.display = 'none';
+    },
+
+    activateNextCommand() {
+      const currentlyActive = this._activeElement();
+      currentlyActive.classList.remove('active');
+      currentlyActive.nextSibling.classList.add('active');
+      if (currentlyActive.nextSibling.offsetTop > this.list.scrollTop) {
+        this.list.scrollTop += currentlyActive.scrollHeight + 6;
+      }
+    },
+
+    activatePrevCommand() {
+      const currentlyActive = this._activeElement();
+      currentlyActive.classList.remove('active');
+      currentlyActive.previousSibling.classList.add('active');
+    },
+
+    _initSearchInput() {
+      if (this.called) {
+        return;
+      }
+      this.called = true;
+
+
+      search.addEventListener('keyup', e => {
+        if (e.which === 40) {
+          this.activateNextCommand();
+        } else if (e.which === 38) {
+          this.activatePrevCommand();
+        }
+      });
+
+      search.addEventListener('input', () => {
+        const currentlyActive = this._activeElement();
+
+        if (currentlyActive) {
+          currentlyActive.classList.remove('active');
+        }
+
+        setTimeout(() => {
+          const searchText = this.jet.styleTag.innerText;
+          let firstVisible;
+
+          if (searchText === '') {
+            firstVisible = this.list.children[0];
+          } else if (this.jet) {
+            firstVisible = document.querySelector(
+            this.jet.styleTag.innerText
+              .slice(0, -15)
+              .replace(':not(', ' ')
+            );
+          } else {
+            firstVisible = null;
+          }
+
+          if (firstVisible) {
+            firstVisible.classList.add('active');
+          }
+        });
+      });
+    },
+
+
+    _initJet() {
       this.jet = new Jets({
         searchTag: `#${nav.id} input`,
         contentTag: `#${nav.id} ul`
       });
+    },
+
+    appendTo(parent) {
+      parent.appendChild(this.element);
+      this._initJet();
+      this._initSearchInput();
     }
   });
 };

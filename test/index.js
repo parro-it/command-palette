@@ -5,15 +5,6 @@ const commandPalette = require('..');
 const commands = require('./fixtures/commands');
 const rum = require('rum-node');
 
-global.openChrome = () => {
-  const BrowserWindow = require('remote').require('browser-window');
-  const win = BrowserWindow.getAllWindows()[0];
-
-  win.setSize(800, 600);
-  win.center();
-  win.show();
-};
-
 
 function recreatePalette() {
   document.body.innerHTML = '';
@@ -22,27 +13,107 @@ function recreatePalette() {
   return palette;
 }
 
-
-test('command-palette: element return root widget element', t => {
+test('palette element property return root widget element', t => {
   const palette = recreatePalette();
   const nav = palette.element;
   t.equal(nav.tagName, 'NAV');
 });
 
 
-test('command-palette: contain all commands', t => {
+test('palette DOM contain all commands', t => {
   const palette = recreatePalette();
   const commandElements = palette.element.querySelectorAll('li');
   t.equal(commandElements.length, commands.length);
 });
 
+test('palette.show make the element visible', t => {
+  const palette = recreatePalette();
+  palette.show();
+  t.equal(palette.element.style.display, '');
+});
 
-test('command-palette: commands are ordered', t => {
+test('palette start invisible', t => {
+  const palette = recreatePalette();
+  t.equal(palette.element.style.display, 'none');
+});
+
+test('palette.hide make the element invisible', t => {
+  const palette = recreatePalette();
+  palette.show();
+  palette.hide();
+  t.equal(palette.element.style.display, 'none');
+});
+
+
+test('palette.active return the command currently active', t => {
+  const palette = recreatePalette();
+  t.equal(palette.active(), 'Align JSON formatting');
+});
+
+function simulateKeyPress(elm, k, type) {
+  const evt = document.createEvent('KeyboardEvent');
+  const init = evt.initKeyboardEvent ? evt.initKeyboardEvent.bind(evt) : evt.initKeyEvent.bind(evt);
+  // Chromium Hack
+  Object.defineProperty(evt, 'keyCode', {
+    get() {
+      return this.keyCodeVal;
+    }
+  });
+  Object.defineProperty(evt, 'which', {
+    get() {
+      return this.keyCodeVal;
+    }
+  });
+
+  evt.keyCodeVal = k;
+  init.call(evt, type, true, true, document.defaultView, false, false, false, false, k, k);
+
+  elm.dispatchEvent(evt);
+  return evt;
+}
+
+
+test('key down activate next command', t => {
+  const palette = recreatePalette();
+  simulateKeyPress(palette.search, 40, 'keyup');
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Align table with Regular');
+    resolve();
+  }, 100));
+});
+
+test('key up activate prev command', t => {
+  const palette = recreatePalette();
+  simulateKeyPress(palette.jet.search_tag, 40, 'keyup');
+  simulateKeyPress(palette.jet.search_tag, 40, 'keyup');
+  simulateKeyPress(palette.jet.search_tag, 38, 'keyup');
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Align table with Regular');
+    resolve();
+  }, 100));
+});
+
+test('can be filtered by text', t => {
+  const palette = recreatePalette();
+  palette.search.focus();
+
+  palette.jet.search_tag.value = 'c';
+  const ev = simulateKeyPress(palette.jet.search_tag, 'c'.charCodeAt(0), 'keydown');
+  palette.jet._onSearch(ev);
+  simulateKeyPress(palette.search, 'c'.charCodeAt(0), 'input');
+
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Clear all bookmarks');
+    resolve();
+  }, 100));
+});
+
+
+test('commands are ordered', t => {
   const palette = recreatePalette();
   const commandElements = Array.from(palette.element.querySelectorAll('li'));
-  window.commandElements=commandElements
-  window.rum = rum
-  function stringSort (a, b) {
+
+  function stringSort(a, b) {
     if (a === b) {
       return 0;
     }
@@ -55,3 +126,19 @@ test('command-palette: commands are ordered', t => {
     stringSort
   ), 'commands are ordered');
 });
+
+if (global.collider) {
+  global.recreatePalette = () => {
+    const p = recreatePalette();
+    p.show();
+    global.collider.open();
+    return p;
+  };
+
+  test.syncTest('quit test environment.', t => {
+    process.stdout.write('1..10\n');
+    t.ok(true, 'quit');
+    setTimeout(() => global.collider.quit(), 100);
+  });
+}
+
