@@ -82,11 +82,54 @@ test('key down activate next command', t => {
   }, 100));
 });
 
+
+test('page down activate next 10 command', t => {
+  const palette = recreatePalette();
+  simulateKeyPress(palette.search, 34, 'keyup');
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Delete to start of line');
+    resolve();
+  }, 100));
+});
+
 test('key up activate prev command', t => {
   const palette = recreatePalette();
   simulateKeyPress(palette.jet.search_tag, 40, 'keyup');
   simulateKeyPress(palette.jet.search_tag, 40, 'keyup');
   simulateKeyPress(palette.jet.search_tag, 38, 'keyup');
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Align table with Regular');
+    resolve();
+  }, 100));
+});
+
+
+test('page up activate prev 10 command', t => {
+  const palette = recreatePalette();
+  simulateKeyPress(palette.jet.search_tag, 34, 'keyup');
+  simulateKeyPress(palette.jet.search_tag, 34, 'keyup');
+  simulateKeyPress(palette.jet.search_tag, 33, 'keyup');
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Delete to start of line');
+    resolve();
+  }, 100));
+});
+
+
+test('activateNextCommand activate next command', t => {
+  const palette = recreatePalette();
+  palette.activateNextCommand();
+  return new Promise(resolve => setTimeout(() => {
+    t.equal(palette.active(), 'Align table with Regular');
+    resolve();
+  }, 100));
+});
+
+test('key up activate prev command', t => {
+  const palette = recreatePalette();
+  palette.activateNextCommand();
+  palette.activateNextCommand();
+  palette.activatePrevCommand();
   return new Promise(resolve => setTimeout(() => {
     t.equal(palette.active(), 'Align table with Regular');
     resolve();
@@ -136,7 +179,7 @@ if (global.collider) {
   };
 
   test.syncTest('quit test environment.', t => {
-    process.stdout.write('1..10\n');
+    process.stdout.write('1..13\n');
     t.ok(true, 'quit');
     setTimeout(() => global.collider.quit(), 100);
   });

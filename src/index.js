@@ -106,6 +106,14 @@ exports.create = (commands) => {
           this.activateNextCommand();
         } else if (e.which === 38) {
           this.activatePrevCommand();
+        } else if (e.which === 34) {
+          for (let i = 0; i < 10; i++) {
+            this.activateNextCommand();
+          }
+        } else if (e.which === 33) {
+          for (let i = 0; i < 10; i++) {
+            this.activatePrevCommand();
+          }
         }
       });
 
