@@ -70,19 +70,28 @@ exports.create = (commands) => {
       this.element.style.display = 'none';
     },
 
+    _ensureVisible(elm) {
+      if ((elm.offsetTop - this.list.offsetTop - this.list.clientHeight + elm.scrollHeight) > this.list.scrollTop) {
+        this.list.scrollTop = elm.offsetTop - this.list.offsetTop - this.list.clientHeight + elm.scrollHeight;
+      }
+
+      if ((elm.offsetTop - this.list.offsetTop) < this.list.scrollTop) {
+        this.list.scrollTop = elm.offsetTop - this.list.offsetTop;
+      }
+    },
+
     activateNextCommand() {
       const currentlyActive = this._activeElement();
       currentlyActive.classList.remove('active');
       currentlyActive.nextSibling.classList.add('active');
-      if (currentlyActive.nextSibling.offsetTop > this.list.scrollTop) {
-        this.list.scrollTop += currentlyActive.scrollHeight + 6;
-      }
+      this._ensureVisible(currentlyActive.nextSibling);
     },
 
     activatePrevCommand() {
       const currentlyActive = this._activeElement();
       currentlyActive.classList.remove('active');
       currentlyActive.previousSibling.classList.add('active');
+      this._ensureVisible(currentlyActive.previousSibling);
     },
 
     _initSearchInput() {
