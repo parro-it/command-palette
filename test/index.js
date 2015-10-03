@@ -76,49 +76,35 @@ function simulateKeyPress(elm, k, type) {
 test('key down activate next command', t => {
   const palette = recreatePalette();
   simulateKeyPress(palette.search, 40, 'keyup');
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Align table with Regular');
-    resolve();
-  }, 100));
+  t.equal(palette.active(), 'Align table with Regular');
+
 });
 
 
 test('page down activate next 10 command', t => {
   const palette = recreatePalette();
   simulateKeyPress(palette.search, 34, 'keyup');
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Delete to start of line');
-    resolve();
-  }, 100));
+  t.equal(palette.active(), 'Delete to start of line');
 });
 
 test('activateNext activate next n command', t => {
   const palette = recreatePalette();
   palette.activateNext(10);
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Delete to start of line');
-    resolve();
-  }, 100));
+  t.equal(palette.active(), 'Delete to start of line');
 });
 
 
 test('activateNext activate next command', t => {
   const palette = recreatePalette();
   palette.activateNext();
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Align table with Regular');
-    resolve();
-  }, 100));
+  t.equal(palette.active(), 'Align table with Regular');
 });
 
 test('activatePrev activate prev n command', t => {
   const palette = recreatePalette();
   palette.activateNext(20);
   palette.activatePrev(10);
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Delete to start of line');
-    resolve();
-  }, 100));
+  t.equal(palette.active(), 'Delete to start of line');
 });
 
 
@@ -126,10 +112,7 @@ test('activatePrev before first command activate it', t => {
   const palette = recreatePalette();
   palette.activateNext(2);
   palette.activatePrev(10);
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Align JSON formatting');
-    resolve();
-  }, 100));
+  t.equal(palette.active(), 'Align JSON formatting');
 });
 
 test('activateNext after last command activate it', t => {
@@ -143,10 +126,7 @@ test('activatePrev activate prev command', t => {
   const palette = recreatePalette();
   palette.activateNext(2);
   palette.activatePrev(1);
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Align table with Regular');
-    resolve();
-  }, 100));
+  t.equal(palette.active(), 'Align table with Regular');
 });
 
 test('key up activate prev command', t => {
@@ -154,10 +134,7 @@ test('key up activate prev command', t => {
   simulateKeyPress(palette.jet.search_tag, 40, 'keyup');
   simulateKeyPress(palette.jet.search_tag, 40, 'keyup');
   simulateKeyPress(palette.jet.search_tag, 38, 'keyup');
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Align table with Regular');
-    resolve();
-  }, 100));
+  t.equal(palette.active(), 'Align table with Regular');
 });
 
 
@@ -166,10 +143,7 @@ test('page up activate prev 10 command', t => {
   simulateKeyPress(palette.jet.search_tag, 34, 'keyup');
   simulateKeyPress(palette.jet.search_tag, 34, 'keyup');
   simulateKeyPress(palette.jet.search_tag, 33, 'keyup');
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Delete to start of line');
-    resolve();
-  }, 100));
+  t.equal(palette.active(), 'Delete to start of line');
 });
 
 test('key up activate prev command', t => {
@@ -177,10 +151,7 @@ test('key up activate prev command', t => {
   palette.activateNext();
   palette.activateNext();
   palette.activatePrev();
-  return new Promise(resolve => setTimeout(() => {
-    t.equal(palette.active(), 'Align table with Regular');
-    resolve();
-  }, 100));
+  t.equal(palette.active(), 'Align table with Regular');
 });
 
 test('can be filtered by text', t => {
@@ -195,7 +166,8 @@ test('can be filtered by text', t => {
   return new Promise(resolve => setTimeout(() => {
     t.equal(palette.active(), 'Clear all bookmarks');
     resolve();
-  }, 100));
+  }, 1));
+
 });
 
 
