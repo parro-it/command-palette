@@ -17,11 +17,11 @@ function guid() {
   return ['', s4(), s4(), s4(), s4()].join('_');
 }
 
-exports.create = (commands, options) => {
+exports.create = (commands, opts) => {
   const search = document.createElement('input');
   search.type = 'search';
 
-  options = options || {};
+  const options = opts || {};
 
   if (options.theme) {
     insertCss(options.theme);
