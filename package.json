@@ -21,14 +21,14 @@
   ],
   "author": "parro-it",
   "scripts": {
-    "cover": "cover test/index.js coverage",
-    "debug": "collider --dev-tools --run test | faucet",
-    "watch": "echo 'not working!'",
-    "test": "collider --run test | faucet",
-    "check": "npm run lint && npm run test",
-    "release-minor": "npm version minor && npm publish && git push --follow-tags",
-    "lint": "eslint src test",
-    "prepublish": "npm run check"
+    "test": "test-collider",
+    "debug": "debug",
+    "cover": "cover",
+    "watch": "watch-collider",
+    "release-minor": "release-minor",
+    "release-patch": "release-patch",
+    "lint": "lint",
+    "prepublish": "check"
   },
   "eslintConfig": {
     "extends": "devenv"
