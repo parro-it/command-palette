@@ -17,9 +17,18 @@ function guid() {
   return ['', s4(), s4(), s4(), s4()].join('_');
 }
 
-exports.create = (commands) => {
+exports.create = (commands, options) => {
   const search = document.createElement('input');
   search.type = 'search';
+
+  options = options || {};
+
+  if (options.theme) {
+    insertCss(options.theme);
+  } else {
+    const themeCss = fs.readFileSync(__dirname + '/theme.css');
+    insertCss(themeCss);
+  }
 
   const ul = document.createElement('ul');
 

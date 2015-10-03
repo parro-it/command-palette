@@ -1,12 +1,5 @@
 .command-palette {
-    display: block;
-    border: 1px solid gray;
-    width: 300px;
-    height: 400px;
-    float: right;
-    border-radius: 5px;
-    box-shadow: 2px 2px 2px gray;
-    padding: 5px;
+  display: block;
 }
 
 .command-palette ul {
@@ -20,28 +13,12 @@
   height: -webkit-calc(100% - 54px);
 }
 
-.command-palette input,
-.command-palette li {
-  display: block;
-  border: 1px solid lightgray;
-  padding: 6px;
-  margin-bottom: 4px;
-  box-shadow: 2px 2px 3px #e0e0e0;
-  width: -webkit-calc(100% - 14px);
-  font-size: 14pt;
-  font-family: monospace;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.command-palette .active {
-  background: blue;
-}
-
 .command-palette input {
   width: 100%;
 }
 
-.command-palette input:focus {
-  outline: none;
+.command-palette input,
+.command-palette li {
+  display: block;
+  overflow: hidden;
 }

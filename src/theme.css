@@ -1,0 +1,39 @@
+
+
+.command-palette {
+  color: #839496;
+  background-color: #002b36;
+
+  border: 1px solid  #586e75;
+  width: 300px;
+  height: 400px;
+  float: right;
+  border-radius: 5px;
+  box-shadow:  4px 4px 10px rgba(200,200,200,0.1),-4px -4px 10px rgba(200,200,200,0.1);
+  padding: 5px;
+}
+
+.command-palette input,
+.command-palette li {
+  border: 1px solid  #586e75;
+  padding: 6px;
+  margin-bottom: 4px;
+  width: -webkit-calc(100% - 14px);
+  font-size: 14pt;
+  font-family: monospace;
+  text-overflow: ellipsis;
+}
+
+.command-palette .active {
+  background: #428bca;
+  color: #002b36;
+}
+
+.command-palette input {
+  background-color: #073642;
+  color: #eee8d5;
+}
+
+.command-palette input:focus {
+  outline: none;
+}
