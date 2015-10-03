@@ -77,7 +77,6 @@ test('key down activate next command', t => {
   const palette = recreatePalette();
   simulateKeyPress(palette.search, 40, 'keyup');
   t.equal(palette.active(), 'Align table with Regular');
-
 });
 
 
@@ -167,7 +166,6 @@ test('can be filtered by text', t => {
     t.equal(palette.active(), 'Clear all bookmarks');
     resolve();
   }, 1));
-
 });
 
 

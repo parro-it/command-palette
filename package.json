@@ -22,8 +22,9 @@
   "author": "parro-it",
   "scripts": {
     "test": "test-collider",
+    "collider": "collider",
     "debug": "debug",
-    "cover": "cover",
+    "cover": "cover-collider",
     "watch": "watch-collider",
     "release-minor": "release-minor",
     "release-patch": "release-patch",

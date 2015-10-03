@@ -120,17 +120,49 @@ exports.create = (commands) => {
       }
       this.called = true;
 
+      let repeatInterval = null;
+      let repeatTimeout = null;
 
-      search.addEventListener('keyup', e => {
-        if (e.which === 40) {
+      const stopRepeating = ()=>{
+        if (repeatInterval) {
+          clearInterval(repeatInterval);
+          repeatInterval = null;
+        }
+
+        if (repeatTimeout) {
+          clearTimeout(repeatTimeout);
+          repeatTimeout = null;
+        }
+      };
+
+      const runKeyCommand = key => {
+        if (key === 40) {
           this.activateNext();
-        } else if (e.which === 38) {
+        } else if (key === 38) {
           this.activatePrev();
-        } else if (e.which === 34) {
+        } else if (key === 34) {
           this.activateNext(10);
-        } else if (e.which === 33) {
+        } else if (key === 33) {
           this.activatePrev(10);
         }
+      };
+
+      const startRepeating = keycode => ()=>{
+        repeatInterval = setInterval(() =>{
+          runKeyCommand(keycode);
+        }, 50);
+      };
+
+      search.addEventListener('keydown', e => {
+        if (!repeatTimeout) {
+          stopRepeating();
+          repeatTimeout = setTimeout(startRepeating(e.which), 500);
+        }
+      });
+
+      search.addEventListener('keyup', e => {
+        runKeyCommand(e.which);
+        stopRepeating();
       });
 
       search.addEventListener('input', () => {
