@@ -40,7 +40,6 @@
   "devDependencies": {
     "brfs": "^1.4.1",
     "browserify": "^11.1.0",
-    "esenv": "^1.1.0",
     "rum-node": "^1.12.1",
     "uglify-js": "^2.4.24",
     "tape-async": ">1.0.0"
