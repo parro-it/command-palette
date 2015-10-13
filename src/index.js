@@ -179,6 +179,12 @@ exports.create = (commands, opts) => {
           this.activateNext(10);
         } else if (key === 33) {
           this.activatePrev(10);
+        } else if (key === 13) {
+          this.hide();
+          this.emit('command', this.active());
+        } else if (key === 27) {
+          this.hide();
+          this.emit('cancel');
         }
       };
 

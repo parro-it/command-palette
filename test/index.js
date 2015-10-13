@@ -80,6 +80,55 @@ test('key down activate next command', t => {
 });
 
 
+test('enter select active command', t => {
+  const palette = recreatePalette();
+  return new Promise(resolve => {
+    palette.on('command', cmd => {
+      t.equal(cmd, 'Align table with Regular');
+      resolve();
+    });
+    simulateKeyPress(palette.search, 40, 'keyup');
+    simulateKeyPress(palette.search, 13, 'keyup');
+  });
+});
+
+test('esc cancel command selection', t => {
+  const palette = recreatePalette();
+  return new Promise(resolve => {
+    palette.on('cancel', () => {
+      t.ok(true);
+      resolve();
+    });
+    simulateKeyPress(palette.search, 27, 'keyup');
+  });
+});
+
+test('palette is closed on command cancelled', t => {
+  const palette = recreatePalette();
+  palette.show();
+  return new Promise(resolve => {
+    palette.on('cancel', () => {
+      t.equal(palette.element.style.display, 'none');
+      resolve();
+    });
+    simulateKeyPress(palette.search, 27, 'keyup');
+  });
+});
+
+test('palette is closed on command selected', t => {
+  const palette = recreatePalette();
+  palette.show();
+  return new Promise(resolve => {
+    palette.on('command', () => {
+      t.equal(palette.element.style.display, 'none');
+      resolve();
+    });
+    simulateKeyPress(palette.search, 40, 'keyup');
+    simulateKeyPress(palette.search, 13, 'keyup');
+  });
+});
+
+
 test('page down activate next 10 command', t => {
   const palette = recreatePalette();
   simulateKeyPress(palette.search, 34, 'keyup');
@@ -196,7 +245,7 @@ if (global.collider) {
   };
 
   test.syncTest('quit test environment.', t => {
-    process.stdout.write('1..20\n');
+    process.stdout.write('1..24\n');
     t.ok(true, 'quit');
     setTimeout(() => global.collider.quit(), 100);
   });
