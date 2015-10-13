@@ -116,11 +116,37 @@ exports.create = (commands, opts) => {
     },
 
     activateNext(howMany) {
-      this.move(howMany, commandElm => commandElm.nextSibling, this.list.lastElementChild);
+      const filter = this.jet.styleTag.innerText
+          .slice(0, -15)
+          .replace(':not(', ' ');
+      const lastElement = filter
+        ? Array.from(this.list.querySelectorAll(filter)).slice(-1)[0]
+        : this.list.lastElementChild;
+
+      this.move(howMany, commandElm => {
+        let next = commandElm.nextSibling;
+        while (next !== null && filter && !next.matches(filter)) {
+          next = next.nextSibling;
+        }
+        return next;
+      }, lastElement );
     },
 
     activatePrev(howMany) {
-      this.move(howMany, commandElm => commandElm.previousSibling, this.list.firstElementChild);
+      const filter = this.jet.styleTag.innerText
+          .slice(0, -15)
+          .replace(':not(', ' ');
+      const firstElement = filter
+        ? this.list.querySelector(filter)
+        : this.list.firstElementChild;
+
+      this.move(howMany, commandElm => {
+        let prev = commandElm.previousSibling;
+        while (prev !== null && filter && !prev.matches(filter)) {
+          prev = prev.previousSibling;
+        }
+        return prev;
+      }, firstElement);
     },
 
     _initSearchInput() {
@@ -189,9 +215,9 @@ exports.create = (commands, opts) => {
             firstVisible = this.list.children[0];
           } else if (this.jet) {
             firstVisible = document.querySelector(
-            this.jet.styleTag.innerText
-              .slice(0, -15)
-              .replace(':not(', ' ')
+              this.jet.styleTag.innerText
+                .slice(0, -15)
+                .replace(':not(', ' ')
             );
           } else {
             firstVisible = null;
