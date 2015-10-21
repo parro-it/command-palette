@@ -73,6 +73,7 @@ exports.create = (commands, opts) => {
 
     show() {
       this.element.style.display = '';
+      search.focus();
     },
 
     hide() {
