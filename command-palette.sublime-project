@@ -3,27 +3,6 @@
 	[
 		{
 			"path": "."
-		},
-		{
-			"path": "/home/parro-it/Desktop/repos/termite"
-		},
-		{
-			"path": "/home/parro-it/.termite"
-		},
-		{
-			"path": "/home/parro-it/Desktop/repos/termite-plugin-example"
-		},
-		{
-			"path": "/home/parro-it/Desktop/repos/termite-plugin-command-manager"
-		},
-		{
-			"path": "/home/parro-it/Desktop/repos/termite-plugin-preference"
-		},
-		{
-			"path": "/home/parro-it/Desktop/repos/termite-plugin-shell"
-		},
-		{
-			"path": "/home/parro-it/Desktop/repos/termite-plugin-core"
 		}
 	]
 }

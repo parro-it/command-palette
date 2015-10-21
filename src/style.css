@@ -10,7 +10,7 @@
   width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-  height: -webkit-calc(100% - 54px);
+  height: -webkit-calc(100% - 64px);
 }
 
 .command-palette input {
